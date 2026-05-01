@@ -56,16 +56,13 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
     };
 
-    // Detecta nome
+    // Detecção de nome (apenas se a Sofia já tiver perguntado na primeira interação)
     if (!conv.clientName) {
       const isFirstMsg = conv.history.filter(h => h.role === 'user').length === 0;
       if (!isFirstMsg) {
-        // Tenta capturar da mensagem atual (segunda mensagem = provável nome)
+        // Tenta capturar da mensagem atual (provável resposta à pergunta do nome)
         const name = detectName(pushName, text);
         if (name) conv.clientName = name;
-      } else if (pushName) {
-        // Na primeira mensagem usa o nome do WhatsApp
-        conv.clientName = pushName.split(' ')[0];
       }
     }
 
